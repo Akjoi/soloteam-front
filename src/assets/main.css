@@ -1,0 +1,44 @@
+@import './base.css';
+
+.v-splitter {
+    min-width: 1px;
+    height: 24px;
+    background-color: var(--black-opacity-10);
+}
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+.link_reset {
+    color: unset;
+    text-decoration: unset;
+    font-size: unset;
+    font-family: unset;
+    cursor: unset;
+}
+.error {
+    color: var(--input-error);
+}
+
+.stripe {
+    position: relative;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.cursor_pointer {
+    cursor: pointer;
+}
+.cursor_not-allowed {
+    cursor: not-allowed;
+}
+.truncate-text {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
