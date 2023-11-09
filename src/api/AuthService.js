@@ -15,8 +15,8 @@ class AuthService {
     static async logout() {
         return await httpClient.delete('/logout');
     }
-    static async refresh(refresh) {
-        return await httpClient.post('/refresh', { refresh });
+    static async refresh() {
+        return await httpClient.get('/refresh');
     }
     static async forgetPassword(login) {
         return await httpClient.post('/forget_password', { login })

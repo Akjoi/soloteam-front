@@ -1,10 +1,9 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { useNoticeStore } from "./notice.store"
+
 import ROUTES_NAMES from '../constants/routesNames';
 import ROLES from '../constants/roles';
 import { useRouter, useRoute } from "vue-router";
-import NOTIFICATION_MESSAGES from '../constants/notificationMessages';
 
 import AuthService from "../api/AuthService";
 
@@ -12,7 +11,6 @@ export const useAuthStore = defineStore('authStore', () => {
 
     const router = useRouter();
     const route = useRoute();
-    const storeNotice = useNoticeStore();
 
     const authError = ref(null);
     const authLoading = ref(false);
@@ -20,21 +18,18 @@ export const useAuthStore = defineStore('authStore', () => {
     const userData = localStorage.getItem(import.meta.env.VITE_ACCESS_NAME) 
     ? ref({
         access: localStorage.getItem(import.meta.env.VITE_ACCESS_NAME),
-        refresh: localStorage.getItem(import.meta.env.VITE_REFRESH_NAME),
         userType: localStorage.getItem(import.meta.env.VITE_USER_TYPE_NAME)
     }) 
     : ref(null);
 
     const isAuthenticated = computed(() => !!userData.value);
 
-    function setAuth({ access, refresh, user_type }, isLocation=true) {
+    function setAuth({ access, user_type }, isLocation=true) {
         localStorage.setItem(import.meta.env.VITE_ACCESS_NAME, access);
-        localStorage.setItem(import.meta.env.VITE_REFRESH_NAME, refresh);
         localStorage.setItem(import.meta.env.VITE_USER_TYPE_NAME, user_type);
 
         userData.value = {
             access,
-            refresh,
             userType: user_type
         }
 
@@ -50,7 +45,6 @@ export const useAuthStore = defineStore('authStore', () => {
     }
     function clearAuth() {
         localStorage.removeItem(import.meta.env.VITE_ACCESS_NAME);
-        localStorage.removeItem(import.meta.env.VITE_REFRESH_NAME);
         localStorage.removeItem(import.meta.env.VITE_USER_TYPE_NAME);
 
         userData.value = null;
@@ -61,13 +55,13 @@ export const useAuthStore = defineStore('authStore', () => {
         authError.value = null;
     }
 
-    async function registrationCompany({ login, password }) {
+    async function registrationCompany({ login, name, password }) {
 
         authLoading.value = true;
         authError.value = null;
 
         try {
-            const data = await AuthService.registrationCompany({ login, password });
+            const data = await AuthService.registrationCompany({ login, name, password });
             setAuth(data);
 
         } catch(e) {
@@ -96,13 +90,12 @@ export const useAuthStore = defineStore('authStore', () => {
         }
     }
     async function login({ login, password }) {
-        
+
         authLoading.value = true;
         authError.value = null;
 
         try {
-            const link = route.query?.link;
-            const data = await AuthService.login({ login, password }, link);
+            const data = await AuthService.login({ login, password });
             setAuth(data);
         } catch(e) {
             console.warn(e);
@@ -113,42 +106,10 @@ export const useAuthStore = defineStore('authStore', () => {
     }
     async function refresh() {
         try {
-            if (userData.value?.refresh) {
-                const data = await AuthService.refresh(userData.value.refresh);
-                setAuth(data, false);
-            } else {
-                clearAuth();
-            }
-            
+            const data = await AuthService.refresh();
+            setAuth(data, false);
         } catch(e) {
             clearAuth();
-        }
-    }
-    async function forgetPassword({login}) {
-        authLoading.value = true;
-        authError.value = null;
-
-        try {
-            await AuthService.forgetPassword(login);
-        } catch(e) {
-            authError.value = e || 'Ошибка сервера';
-        } finally {
-            authLoading.value = false;
-        }
-    }
-    async function updatePassword({login, new_password}) { 
-        authLoading.value = true;
-        authError.value = null;
-
-        try {
-            const code = route.query?.code;
-            const data = await AuthService.updatePassword({login, new_password, code});
-            setAuth(data);
-            storeNotice.setMessage(NOTIFICATION_MESSAGES.PASSWORD_RECOVERED);
-        } catch(e) {
-            authError.value = e || 'Ошибка сервера';
-        } finally {
-            authLoading.value = false;
         }
     }
     async function logout() {
@@ -175,10 +136,8 @@ export const useAuthStore = defineStore('authStore', () => {
         registrationFreelancer,
         login,
         refresh,
-        forgetPassword,
         logout,
-        clearError,
-        updatePassword
+        clearError
     }
 
 });
