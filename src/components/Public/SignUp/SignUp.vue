@@ -53,7 +53,7 @@
         <template #form-action>
             <p class="error" v-if="authError">{{ authError }}</p>
             <Button label="Зарегистрироваться" class="width_max" :disabled="authLoading" :loading="authLoading" @on-click="onRegistration" />
-            <p class="font-caption-small color_black-opacity-50">Регистрируюясь, вы соглашаетесь с <a class="cursor_pointer" href="https://docs.google.com/document/d/1Lu1lPIUjNh_Sqdgnmy_TicP7LeQ6A5mRNLYY98uh2ko/edit#heading=h.rvcxzbnm66cc">условиями</a></p>
+            <p class="font-caption-small color_black-opacity-50">Регистрируясь, вы соглашаетесь с <a class="cursor_pointer" href="https://docs.google.com/document/d/1Lu1lPIUjNh_Sqdgnmy_TicP7LeQ6A5mRNLYY98uh2ko/edit#heading=h.rvcxzbnm66cc">условиями</a></p>
         </template>
         <template #links>
             <RouterLink :to="{ name: ROUTES_NAMES.LOGIN }">Есть аккаунт</RouterLink>
