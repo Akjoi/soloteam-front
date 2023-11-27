@@ -8,7 +8,7 @@ export function isNullFreelancer(profile) {
 }
 
 export function generateLink(profile) {
-    const link = `${window.location.origin}/freelancers/${profile.link}`;
+    const link = `${window.location.origin}/app/freelancers/${profile.link}`;
     return link;
 }
 
