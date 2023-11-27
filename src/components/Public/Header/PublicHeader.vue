@@ -1,6 +1,6 @@
 <template>
     <header class="header">
-        <LogoIcon />
+        <LogoIcon :class="{cursor_pointer: isIconActive}" @click="toLanding"/>
         <div class="header__actions">
             <Button :type="BUTTON_TYPE.TETRARY" label="Войти" @on-click="toLogin" />
             <Button :type="BUTTON_TYPE.SECONDARY" label="Регистрация" @on-click="toSignup" />
@@ -13,16 +13,24 @@
     import { LogoIcon } from '@/components/Icons';
     import BUTTON_TYPE from '@/constants/buttonTypes';
     import ROUTES_NAMES from "@/constants/routesNames";
-    import { useRouter } from 'vue-router';
+    import { useRouter, useRoute } from 'vue-router';
+    import { computed } from 'vue';
 
     const router = useRouter();
-
+    const route = useRoute();
+    
     function toLogin() {
         router.push({ name: ROUTES_NAMES.LOGIN });
     }
     function toSignup() {
         router.push({ name: ROUTES_NAMES.SIGN_UP });
     }
+    function toLanding() {
+        if (isIconActive.value) { window.open("https://soloteam.io")}
+    }
+    const isIconActive = computed(() => {
+        return route.name === ROUTES_NAMES.FREELANCER_PROFILE_PUBLIC
+    })
 </script>
 
 <style lang="scss" scoped>
